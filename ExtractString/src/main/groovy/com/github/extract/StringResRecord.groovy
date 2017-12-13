@@ -1,5 +1,6 @@
 package com.github.extract
 
+import com.github.extract.api.ExtractStringResAPI
 import jxl.Workbook
 import jxl.format.Alignment
 import jxl.format.Colour
@@ -8,24 +9,34 @@ import jxl.write.Label
 import jxl.write.WritableCellFormat
 import jxl.write.WritableWorkbook
 
+import java.text.SimpleDateFormat
+
 /**
  * Created by zhaoyu1 on 2017/7/31.
  */
-class StringRecord {
+class StringResRecord implements ExtractStringResAPI{
     // values-zh/values-zh.xml
-    def final TEMPLATE_VALUES = "/intermediates/res/merged/debug/values%s/values%s.xml"
-    def final APP_BUILD_PATH = "C:/Users/zhaoyu1/Documents/KotlinAndroidDemo/app/build"     // app build 目录
 
-    def project
-    def valuesPath
-    def excelFile
-    def postfix = ["", "zh-rCN", "zh-rHK", "zh-rTW"]                    // 访问的values文件
-    def langStrings = [:]
-    def excelFileName = "write.xls"
+    def final TEMPLATE_VALUES = "/intermediates/res/merged/debug/values%s/values%s.xml"
+    // app build 目录
+    def app_build_path = ""
+
+    def postfix = [""]                // 访问的values文件，默认values.xml
+    def langStrings = [:]             // 每个语言对应的 [string,stringArray]
+    def excelFileName = ""
 
     static void main(String[] args) {
-        def test = new StringRecord()
+        def test = new StringResRecord()
         test.getDefaultStrings()
+    }
+
+    @Override
+    void create(ExtractConfiguration configuration, File buildFile) {
+        this.postfix.addAll(configuration.postfix)
+        def fileName = "/export_" + new SimpleDateFormat("yyyyMMddHHmm").format(new Date()) + ".xls"
+        this.excelFileName = configuration.targetFileFullPath ?: (buildFile.getAbsolutePath() + "/" + fileName)
+        this.app_build_path = buildFile.getAbsolutePath()
+        getDefaultStrings()
     }
 
     def getDefaultStrings() {
@@ -57,6 +68,11 @@ class StringRecord {
         (defaultStringsItems, defaultStringArrayItems) = langStrings.get("")
         postfix.remove("")      // 移除
 
+        // 默认语言，直接return
+        if(postfix.size() <= 0) {
+            return
+        }
+
         def stringsItems = [:]           // string
         def stringsArrayItems = [:]     // string-array
 
@@ -66,7 +82,7 @@ class StringRecord {
         // --- 设置表头 （默认）
         def titleCellFormat = getTitleCellFormat()
         def cell_title_key = new Label(0, 0, "string_key", titleCellFormat)
-        def cell_title_default_value = new Label(1, 0, "_value", titleCellFormat)
+        def cell_title_default_value = new Label(1, 0, "default_value", titleCellFormat)
         sheet.addCell(cell_title_key)
         sheet.addCell(cell_title_default_value)
 
@@ -129,16 +145,17 @@ class StringRecord {
     }
 
     /**
-     * 根据语言标签生成的不同的 sheet
+     * 根据语言标签生成的不同的 sheet 工作表
      * @param langTag
      * @param writeBook
      * @return
      */
-    def createLangSheet(langTag, writeBook) {
+    def createLangSheet(String langTag,WritableWorkbook writeBook) {
         // --- 必要的前置检查
-        langTag = langTag?.length() > 0 ? "-".concat(langTag) : ""       // 处理短杠
+        langTag = langTag?.length() > 0 ? "-".concat(langTag) : ""       // 处理短杠，形式 -en,-zh-rCN
         println("Start parse file values${langTag}.xml  ...")
-        def pre = APP_BUILD_PATH
+
+        def pre = app_build_path
         final values_path = pre + String.format(TEMPLATE_VALUES, langTag, langTag)
         def file = new File(values_path)
         if (!file.exists()) {
@@ -150,7 +167,7 @@ class StringRecord {
         // --- 创建工作表
         def sheet = createSheet(writeBook, "values${langTag}")
 
-        def stringsItems = [:]           // string
+        def stringsItems = [:]           // string map
         def stringsArrayItems = [:]      // string-array
         (stringsItems, stringsArrayItems) = parserStringValuesFile(file)
 
@@ -189,19 +206,27 @@ class StringRecord {
         [stringsItems, stringsArrayItems]
     }
 
+    /**
+     * 使用Groovy 处理xml
+     * @param file
+     * @return
+     */
     private def parserStringValuesFile(File file) {
         def valuesFile = file
         def root = new XmlParser().parse(valuesFile)
         def stringItems = [:]
+        // 拿到所有String
         root.string.each {
             def translatableValue = it.attributes()["translatable"]
-            //检测不需要国际化数组配置
+            // 检测不需要国际化数组配置
             if (null == translatableValue || Boolean.valueOf(translatableValue)) {
                 def item = it.attributes()["name"]
                 stringItems << [(item): it.text()]
             }
         }
         println("string size:${stringItems.size()}")
+
+        // 拿到所有string-array
         def arrayArrayItems = [:]
         root."string-array".each {
             def translatableValue = it.attributes()["translatable"]

@@ -11,5 +11,5 @@ public class ExtractConfiguration {
     // 生成的目标文件全路径，不配置，则使用默认
     public String targetFileFullPath;
     // 配置检测目录,如果用户动态设置了build目录
-    public String buildStringFile;
+    // public String buildPath;
 }
