@@ -20,6 +20,13 @@ android {
     }
 }
 
+extractConfig {
+    postfix = ['en', 'zh-rTW']
+    // 配置检测目录,如果用户动态设置了build目录
+    buildStringFile = "默認的"
+    targetFileFullPath = "默認的"
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:26.1.0'
