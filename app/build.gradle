@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'plugin.extractString'
+//apply plugin: 'plugin.extractString'
 
 android {
     compileSdkVersion 26
@@ -18,14 +18,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    lintOptions {
+        abortOnError false
+    }
 }
 
-extractConfig {
-    postfix = ['en', 'zh-rTW']
-    // 配置检测目录,如果用户动态设置了build目录
-    buildStringFile = "默認的"
-    targetFileFullPath = "默認的"
-}
+//extractConfig {
+//    postfix = ['en', 'zh-rTW']
+//}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])

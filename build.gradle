@@ -5,13 +5,17 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
-        maven {
-            url uri('/repo')
-        }
+//        maven {
+//            url uri('/repo')
+//        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.github.extract:ExtractString:1.0'
+//        classpath 'com.github.extract:ExtractString:1.0'
+
+        classpath 'com.android.tools.build:gradle:2.0.0-beta6'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+        classpath 'com.github.dcendents:android-maven-plugin:1.2'
     }
 }
 
@@ -20,6 +24,11 @@ allprojects {
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
+    }
+
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
     }
 }
 
