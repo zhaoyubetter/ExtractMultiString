@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'plugin.extractString'
+apply plugin: 'plugin.extractString'
 
 android {
     compileSdkVersion 26
@@ -24,9 +24,9 @@ android {
     }
 }
 
-//extractConfig {
-//    postfix = ['en', 'zh-rTW']
-//}
+extractConfig {
+    postfix = ['en', 'zh-rTW']
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
