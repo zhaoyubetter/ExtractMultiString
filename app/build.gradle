@@ -29,6 +29,11 @@ extractConfig {
     //targetFileFullPath = "D://aaa.xls"  // 目标文件全路径，可不填，默认生成在build文件下；
 }
 
+// 自定义Task
+task('getCurrentPath') << {
+    println(">>>>>>>>> " + project.android.sourceSets.main.res.srcDirs[0].getAbsolutePath())
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:26.1.0'
