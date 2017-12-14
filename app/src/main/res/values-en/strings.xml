@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ExtractMultiString</string>
+    <string name="xlistview_header_hint_normal">Pull to Refresh</string>
+    <string name="xlistview_header_hint_ready">Release Refresh Data</string>
+    <string name="xlistview_header_hint_loading">Loading...</string>
+    <string name="xlistview_header_last_time">Last Update Time:</string>
+    <string name="xlistview_footer_hint_normal">View More</string>
+    <string name="xlistview_footer_hint_ready">Release Loading More</string>
 </resources>
