@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="abc">nihao</string>
+    <string name="aaa_abc">你好abc</string>
+    <string name="aaa_hello">你好</string>
+
+    <string name="aaa_one">一</string>
+    <string name="aaa_two">二</string>
+    <string name="aaa_three">三</string>
+    <string name="aaa_four">四</string>
+    <string name="aaa_five">五</string>
+
+    <string-array name="aaa_string_number">
+        <item>@string/aaa_one</item>
+        <item>@string/aaa_two</item>
+        <item>@string/aaa_three</item>
+        <item>@string/aaa_four</item>
+        <item>@string/aaa_five</item>
+        <item>@string/app_name</item> <!-- 当然目录下的其他xml文件 -->
+        <item>六</item>
+    </string-array>
+
 </resources>

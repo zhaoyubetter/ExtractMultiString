@@ -8,4 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- invalid location -->
+    <string name="style_strings">定义在style文件中的strings自营</string>
+
 </resources>

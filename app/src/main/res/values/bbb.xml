@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bbb_abc">bbb_string文件</string>
+    <string name="bbb_hello">bbb_你好</string>
+
+</resources>
