@@ -12,6 +12,9 @@ import jxl.write.WritableWorkbook
 
 import java.text.SimpleDateFormat
 
+/**
+ * 考虑从 res 目录下获取资源文件，并实现demo例子，明天来写 gralde 插件
+ */
 class GroovyEachFiles {
 
     def postfix = []          // 访问的values文件夹前缀，默认values
