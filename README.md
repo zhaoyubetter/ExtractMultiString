@@ -12,6 +12,8 @@
 ![生成的excel文件截图](https://github.com/zhaoyubetter/MarkdownPhotos/raw/master/img/plugin_extract_strings.jpg)
 
 
+### 1.1.0 的版本，默认获取资源，改从res目录中获取
+
 # 使用说明
 
 1. 在项目的根目录`build.gradle`,添加依赖如下
@@ -19,7 +21,7 @@
 ```java
     dependencies {
         ...
-        classpath 'com.github.extract:ExtractString:1.0.0'
+        classpath 'com.github.extract:ExtractString:1.1.0'
     }
 
 ```
@@ -33,6 +35,7 @@ apply plugin: 'plugin.extractString'  //apply 插件
 // 配置插件dsl
 extractConfig {
     postfix = ['en', 'zh-rTW']    // 表示提出 en、 zh-rTW 下的资源，可支持多个
+    //useRes=true  // use res folder
     //targetFileFullPath = "D://aaa.xls"  // 目标文件全路径，可不填，默认生成在build文件下；
 }
 ```
@@ -40,4 +43,5 @@ extractConfig {
 3. clean 工程后，可以发现，在对应的 module 下，可发现 `extract strings` task 组，展开，点击执行；
 
 ## TODO
-1. 直接获取 res 目录的资源文件有待支持；因为build下的values文件是包含了所有的（里面还有一些android自带的strings资源）
+~~1. 直接获取 res 目录的资源文件有待支持；因为build下的values文件是包含了所有的（里面还有一些android自带的strings资源）~~
+2. 考虑实现 excel 转xml；
