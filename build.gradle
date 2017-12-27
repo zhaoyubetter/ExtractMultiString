@@ -6,12 +6,12 @@ buildscript {
         jcenter()
         maven { url 'https://maven.google.com' }
 //        maven {
-//            url uri('/repo')
+//          //  url uri('repo')
 //        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.3'
-        classpath 'com.github.extract:ExtractString:1.0.0'
+        classpath 'com.github.extract:ExtractString:1.1.0'
 
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
         classpath 'com.github.dcendents:android-maven-plugin:1.2'
