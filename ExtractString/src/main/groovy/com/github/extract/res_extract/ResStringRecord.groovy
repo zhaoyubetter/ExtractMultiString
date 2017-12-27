@@ -1,5 +1,7 @@
-package com.github.extract.res
+package com.github.extract.res_extract
 
+import com.github.extract.ExtractConfiguration
+import com.github.extract.api.ExtractStringResAPI
 import jxl.Workbook
 import jxl.format.Alignment
 import jxl.format.Colour
@@ -15,28 +17,60 @@ import java.text.SimpleDateFormat
 /**
  * 考虑从 res 目录下获取资源文件，并实现demo例子，明天来写 gralde 插件
  */
-class GroovyEachFiles {
+class ResStringRecord implements ExtractStringResAPI {
+
+    final String DEFAULT_FOLDER = "values"
 
     def postfix = []          // 访问的values文件夹前缀，默认values
     def langStrings = [:]     // 每个语言对应的 [string,stringArray]
     def excelFileName = ""
+    def resFolderPath = ""     // 资源目录
 
-    void testGetXml() {
-        def langs = ["en", "zh-rTW"]    // 外界传入
-        postfix << "values"             // 添加默认
-        langs.each {
-            postfix << "values-${it}"
+    public ResStringRecord(String resFolderPath) {
+        this.resFolderPath = resFolderPath
+    }
+
+    static void main(String[] args) {
+//        ResStringRecord aa = new ResStringRecord("")
+//        // 文件配置
+//        def fileName = "/export_" + new SimpleDateFormat("yyyyMMddHHmm").format(new Date()) + ".xls"
+//        aa.excelFileName = fileName
+//        aa.postfix << "values"                  // 添加默认
+//        aa.postfix << "values-en"
+//        aa.resFolderPath = "/Users/zhaoyu/Documents/github/ExtractMultiString/app/src/main/res"
+//        aa.testGetXml()
+
+        def postfix = ['a','b','c']
+        postfix.each {
+            if(it == 'a') {
+                postfix.remove(it)
+            }
         }
-        def fileName = "export_" + new SimpleDateFormat("yyyyMMddHHmm").format(new Date()) + ".xls"
-        //this.excelFileName = configuration.targetFileFullPath ?: (buildFile.getAbsolutePath() + "/" + fileName)
-        this.excelFileName = fileName
+        println(postfix)
+    }
 
+    @Override
+    void create(ExtractConfiguration configuration, File buildFile) {
+        this.postfix << DEFAULT_FOLDER                  // 添加默认
+        configuration.postfix.each {
+            this.postfix << "values-${it}"              // 资源文件夹
+        }
+
+        // 文件配置
+        def fileName = "export_" + new SimpleDateFormat("yyyyMMddHHmm").format(new Date()) + ".xls"
+        this.excelFileName = configuration.targetFileFullPath ?: (buildFile.getAbsolutePath() + "/" + fileName)
+        this.excelFileName = fileName
+        doWork()
+    }
+
+    private void doWork() {
+        def invalidDir = []     // 无效的目录
         // 遍历各个语言目录，获取资源信息
         postfix.each { it ->
-            def filePath = "/Users/zhaoyu/Documents/github/ExtractMultiString/app/src/main/res/${it}"
+            def filePath = "${resFolderPath}/${it}"
             File dir = new File(filePath)
             def files = []      // all xml file in res/values or (res/values-%s)
-            if (dir.isDirectory()) {
+            if (dir.exists() && dir.isDirectory()) {
                 dir.listFiles(new FileFilter() {
                     @Override
                     boolean accept(File pathname) {
@@ -44,8 +78,11 @@ class GroovyEachFiles {
                     }
                 })?.each { files << it }     // handle all xml file
                 langStrings.put(it, handleXmlFiles(files))
+            } else {
+                invalidDir << it
             }
         }
+        postfix.removeAll(invalidDir)       // 移除无效目录
 
         // 生成各个excel
         createAllExcel(langStrings)        // 生成excel

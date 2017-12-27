@@ -10,6 +10,10 @@ public class ExtractConfiguration {
     public List<String> postfix;
     // 生成的目标文件全路径，不配置，则使用默认
     public String targetFileFullPath;
+    /**
+     * 使用res目录下的资源,false 使用build下的merge资源
+     */
+    public boolean useRes = true;
     // 配置检测目录,如果用户动态设置了build目录
     // public String buildPath;
 }

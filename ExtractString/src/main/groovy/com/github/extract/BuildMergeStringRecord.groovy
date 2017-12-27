@@ -14,7 +14,7 @@ import java.text.SimpleDateFormat
 /**
  * Created by zhaoyu1 on 2017/7/31.
  */
-class StringResRecord implements ExtractStringResAPI{
+class BuildMergeStringRecord implements ExtractStringResAPI{
     // values-zh/values-zh.xml
 
     def final TEMPLATE_VALUES = "/intermediates/res/merged/debug/values%s/values%s.xml"
@@ -26,7 +26,7 @@ class StringResRecord implements ExtractStringResAPI{
     def excelFileName = ""
 
     static void main(String[] args) {
-        def test = new StringResRecord()
+        def test = new BuildMergeStringRecord()
         test.getDefaultStrings()
     }
 

@@ -3,7 +3,7 @@ apply plugin: 'maven'   //maven插件，用于上传插件到仓库
 
 
 group = "com.github.extract"    //project属性
-version = "1.0.0"                 //project属性
+version = "1.1.0"                 //project属性
 
 dependencies {
     compile gradleApi()//gradle sdk

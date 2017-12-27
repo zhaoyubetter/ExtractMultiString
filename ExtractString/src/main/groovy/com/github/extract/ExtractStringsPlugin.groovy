@@ -3,7 +3,6 @@ package com.github.extract
 import com.github.extract.api.ExtractStringResAPI
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.Task
 
 class ExtractStringsPlugin implements Plugin<Project> {
 
@@ -18,9 +17,10 @@ class ExtractStringsPlugin implements Plugin<Project> {
             throw new IllegalArgumentException(
                     'ExtractStrings gradle plugin can only be applied to android projects.')
         }
-
         project.extensions.create('extractConfig', ExtractConfiguration.class)
-        api = new StringResRecord()
+
+        // res folder
+        String resFolder = project.android.sourceSets.main.res.srcDirs[0].getAbsolutePath()
 
         // create a task use group
         final def currentTask = project.tasks.create(["name": "doExtractStringsToExcel", "group": "extract Strings"]) << {
@@ -28,16 +28,22 @@ class ExtractStringsPlugin implements Plugin<Project> {
                 throw new IllegalStateException('Must apply \'com.android.application\' or \'com.android.library\' first!')
             }
 
+            // 创建接口实例
+            api = project.extractConfig?.useRes ? new com.github.extract.res_extract.ResStringRecord(resFolder) : new BuildMergeStringRecord()
+
             // 获取配置参数
             long startTime = System.currentTimeMillis()
             println ">>>>>> Start extract strings resource!"
             println(">>>>>> Postfix:${project.extractConfig?.postfix}")
             println(">>>>>> TargetFilePath:${project.extractConfig?.targetFileFullPath}")
+            println(">>>>>> useRes:${project.extractConfig?.useRes}")
             api.create(project.extractConfig, project.buildDir)
             println(">>>>> finish extract, Total time: ${(System.currentTimeMillis() - startTime) / 1000} ")
         }
 
-        // 设置依赖于build Task
-        currentTask.dependsOn(project.tasks.findByName("build"))
+        // 设置依赖于build Task (奇怪，加了判断无效，必须先手动build，再抽资源)
+        if(!project.extractConfig?.useRes) {
+            currentTask.dependsOn(project.tasks.findByName("build"))
+        }
     }
 }
