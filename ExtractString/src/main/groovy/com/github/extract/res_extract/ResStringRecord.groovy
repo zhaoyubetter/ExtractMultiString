@@ -15,15 +15,34 @@ import jxl.write.WritableWorkbook
 import java.text.SimpleDateFormat
 
 /**
- * 考虑从 res 目录下获取资源文件，并实现demo例子，明天来写 gralde 插件
+ * 从 res 资源目录下获取资源文件
+ * @author zhaoyubetter
  */
 class ResStringRecord implements ExtractStringResAPI {
 
+    /**
+     * 默认 values folder
+     */
     final String DEFAULT_FOLDER = "values"
 
+    /**
+     * 访问的values文件夹后缀，如：[values, values-en,values-zh-rTW]
+     */
     def postfix = []          // 访问的values文件夹前缀，默认values
+
+    /**
+     * 每个语言，都有对应的 strings， 与 string-Array
+     * key: String， values(-[en|zh-rTW])?
+     * value: List， [strings, stringArray]
+     */
     def langStrings = [:]     // 每个语言对应的 [string,stringArray]
+    /**
+     * excel文件名
+     */
     def excelFileName = ""
+    /**
+     * 资源目录
+     */
     def resFolderPath = ""     // 资源目录
 
     public ResStringRecord(String resFolderPath) {
@@ -40,9 +59,9 @@ class ResStringRecord implements ExtractStringResAPI {
 //        aa.resFolderPath = "/Users/zhaoyu/Documents/github/ExtractMultiString/app/src/main/res"
 //        aa.testGetXml()
 
-        def postfix = ['a','b','c']
+        def postfix = ['a', 'b', 'c']
         postfix.each {
-            if(it == 'a') {
+            if (it == 'a') {
                 postfix.remove(it)
             }
         }
@@ -51,9 +70,10 @@ class ResStringRecord implements ExtractStringResAPI {
 
     @Override
     void create(ExtractConfiguration configuration, File buildFile) {
-        this.postfix << DEFAULT_FOLDER                  // 添加默认
+        this.postfix << DEFAULT_FOLDER                  // 添加默认  ->  [values]
         configuration.postfix.each {
-            this.postfix << "values-${it}"              // 资源文件夹
+            // 资源文件夹 ->  [values, values-en, values-zh-rTW]
+            this.postfix << "values-${it}"
         }
 
         // 文件配置
@@ -69,7 +89,8 @@ class ResStringRecord implements ExtractStringResAPI {
         postfix.each { it ->
             def filePath = "${resFolderPath}/${it}"
             File dir = new File(filePath)
-            def files = []      // all xml file in res/values or (res/values-%s)
+            // all xml file in res/values or (res/values-%s)
+            def files = []
             if (dir.exists() && dir.isDirectory()) {
                 dir.listFiles(new FileFilter() {
                     @Override
@@ -77,6 +98,7 @@ class ResStringRecord implements ExtractStringResAPI {
                         return pathname.getName().endsWith(".xml")
                     }
                 })?.each { files << it }     // handle all xml file
+
                 langStrings.put(it, handleXmlFiles(files))
             } else {
                 invalidDir << it
@@ -214,7 +236,8 @@ class ResStringRecord implements ExtractStringResAPI {
             postfix.eachWithIndex { it, i ->
                 (stringsItems, stringsArrayItems) = langStrings.get(it)
                 def arraysItems = stringsArrayItems.find { it.key == array.key }
-                if (arraysItems != null && arraysItems.value.size == array.value.size) {  // 为null或数量不对
+                if (arraysItems != null && arraysItems.value.size == array.value.size) {
+                    // 为null或数量不对
                     arraysItems.value.eachWithIndex { item, inx ->
                         def cell_value = new Label(2 + index, currentRow + inx, item)
                         sheet.addCell(cell_value)
@@ -256,6 +279,11 @@ class ResStringRecord implements ExtractStringResAPI {
         return cellFormat
     }
 
+    /**
+     * 获取执行xml文件中的所有 string，stringArray，并返回长度为2的list集合
+     * @param files xml 文件
+     * @return list
+     */
     private def handleXmlFiles(List files) {
         def stringItems = [:]           // string           (key,value)
         def arrayArrayItems = [:]       // string-array     (key, [])
@@ -266,7 +294,7 @@ class ResStringRecord implements ExtractStringResAPI {
             }
         }
 
-        // 获取所有string后，在来处理string-array，因为string-array可能引入string里面的内容
+        // 获取所有string后，再来处理string-array，因为string-array可能引入string里面的内容
         files.each { it ->
             def items = getStringArrays(it, stringItems)
             if (items.size() > 0) {
@@ -279,6 +307,7 @@ class ResStringRecord implements ExtractStringResAPI {
 
     /**
      * get all string in specified file
+     * 获取指定文件下的所有string，并返回map，map key 为 string 名称，value 为string的值
      * @param file
      * @return map
      */
@@ -301,8 +330,9 @@ class ResStringRecord implements ExtractStringResAPI {
 
     /**
      * get all string-array in specified file
+     * 获取指定文件下的所有string-array，并返回map，map key 为 string 名称，value 为string[]，或者@string/xxx
      * @param file
-     * @return
+     * @return map
      */
     private Map getStringArrays(File file, stringItems) {
         println("--------> Get string-array from file [${file.getParentFile().getName()}/${file.getName()}]")
