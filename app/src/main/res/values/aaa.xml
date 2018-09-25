@@ -15,8 +15,12 @@
         <item>@string/aaa_three</item>
         <item>@string/aaa_four</item>
         <item>@string/aaa_five</item>
-        <item>@string/app_name</item> <!-- 当然目录下的其他xml文件 -->
+        <item>@string/app_name</item> <!-- 目录下的其他xml文件 -->
         <item>六</item>
     </string-array>
+
+    <!-- no translate，比如：协议等，注意不需要翻译的资源-->
+    <string name="open_url_scheme" translatable="false">app://github.com/extract</string>
+    <string name="major_color_value" translatable="false">#fffffcc</string>
 
 </resources>

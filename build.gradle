@@ -5,14 +5,13 @@ buildscript {
     repositories {
         jcenter()
         maven { url 'https://maven.google.com' }
-//        maven {
-//          //  url uri('repo')
-//        }
+        // ===== for local publish. add ====
+        maven { url uri('repo') }
         google()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.3'
-        classpath 'com.github.extract:ExtractString:1.1.0'
+        classpath 'com.github.extract:ExtractString:1.1.1'
 
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
         classpath 'com.github.dcendents:android-maven-plugin:1.2'
