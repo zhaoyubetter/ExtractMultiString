@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat
 /**
  * Created by zhaoyu1 on 2017/7/31.
  */
+@Deprecated
 class BuildMergeStringRecord implements ExtractStringResAPI{
     // values-zh/values-zh.xml
 

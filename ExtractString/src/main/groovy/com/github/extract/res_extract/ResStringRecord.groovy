@@ -24,6 +24,8 @@ class ResStringRecord implements ExtractStringResAPI {
      * 默认 values folder
      */
     final String DEFAULT_FOLDER = "values"
+    final static String NO_TRANSLATE= '--- The following lines do not need translation ---'
+    final static String OUTPUT_ROOT = 'extract_strings_output'
 
     /**
      * 访问的values文件夹后缀，如：[values, values-en,values-zh-rTW]
@@ -49,21 +51,15 @@ class ResStringRecord implements ExtractStringResAPI {
         this.resFolderPath = resFolderPath
     }
 
+    // test method
     static void main(String[] args) {
-//        ResStringRecord aa = new ResStringRecord("")
-//        // 文件配置
-//        def fileName = "/export_" + new SimpleDateFormat("yyyyMMddHHmm").format(new Date()) + ".xls"
-//        aa.excelFileName = fileName
-//        aa.postfix << "values"                  // 添加默认
-//        aa.postfix << "values-en"
-//        aa.resFolderPath = "/Users/zhaoyu/Documents/github/ExtractMultiString/app/src/main/res"
-//        aa.testGetXml()
+        def resFolderPath = "/Users/zhaoyu1/Documents/github/ExtractMultiString/app/src/main/res"
+        ExtractConfiguration configuration = new ExtractConfiguration()
+        configuration.postfix = ['en', 'zh-rTW']
+        configuration.targetFileFullPath = '/Users/zhaoyu1/Documents/github/ExtractMultiString/app/test.xls'
 
-        def postfix = ['a', 'b', 'c']
-        postfix.forEach {
-            println(it + ">>>>==")
-        }
-        println(postfix)
+        ResStringRecord record = new ResStringRecord(resFolderPath)
+        record.create(configuration, new File('.'))
     }
 
     @Override
@@ -77,7 +73,6 @@ class ResStringRecord implements ExtractStringResAPI {
         // 文件配置
         def fileName = "export_" + new SimpleDateFormat("yyyyMMddHHmm").format(new Date()) + ".xls"
         this.excelFileName = configuration.targetFileFullPath ?: (buildFile.getAbsolutePath() + "/" + fileName)
-        this.excelFileName = fileName
         doWork()
     }
 
@@ -157,12 +152,18 @@ class ResStringRecord implements ExtractStringResAPI {
             }
 
             // --- 添加内容 noTranslate, 不需要翻译的
-            currentRow = sheet.rows
-            noTranslateStringItems.eachWithIndex { key, value, index ->
-                def cell_key = new Label(0, index + 1, key)
-                def cell_value = new Label(1, index + 1, value)
-                sheet.addCell(cell_key)
-                sheet.addCell(cell_value)
+            if(noTranslateStringItems.size() > 0) {
+                currentRow = sheet.rows
+                def noTranslateTitle = new Label(0, currentRow, NO_TRANSLATE, getTitleCellFormat())
+                sheet.mergeCells(0, currentRow, 1, currentRow) // 合并单元格
+                sheet.addCell(noTranslateTitle)
+                noTranslateStringItems.eachWithIndex { key, value, index ->
+                    currentRow = sheet.rows
+                    def cell_key = new Label(0, currentRow, key)
+                    def cell_value = new Label(1, currentRow, value)
+                    sheet.addCell(cell_key)
+                    sheet.addCell(cell_value)
+                }
             }
         }
 
@@ -262,20 +263,26 @@ class ResStringRecord implements ExtractStringResAPI {
             }
         }
 
-        // --- 添加内容 stringsItem - 不需要翻译的 (默认语言)
-        currentRow = sheet.rows
-        stringsItemNoTranslate.eachWithIndex {key, value, index ->
-            def cell_key = new Label(0, index + 1, key)
-            def cell_value = new Label(1, index + 1, value)
-            sheet.addCell(cell_key)
-            sheet.addCell(cell_value)
+        if(defaultStringsItemNoTranslate.size() > 0) {
+            // --- 添加内容 stringsItemNoTranslate - 不需要翻译的 (默认语言)
+            currentRow = sheet.rows
+            def noTranslateTitle = new Label(0, currentRow, NO_TRANSLATE, getTitleCellFormat())
+            sheet.mergeCells(0, currentRow, 1 + postfix.size, currentRow) // 合并单元格
+            sheet.addCell(noTranslateTitle)
+            defaultStringsItemNoTranslate.eachWithIndex {key, value, index ->
+                currentRow = sheet.rows
+                def cell_key = new Label(0, currentRow, key)
+                def cell_value = new Label(1, currentRow, value)
+                sheet.addCell(cell_key)
+                sheet.addCell(cell_value)
 
-            // 其他语言
-            postfix.eachWithIndex { it, i ->
-                (stringsItems, stringsArrayItems) = langStrings.get(it)
-                stringsItems.find { it.key == key }?.each {
-                    def cell_other_value = new Label(2 + i, index + 1, it.value)   // 3列1行开始
-                    sheet.addCell(cell_other_value)
+                // 其他语言
+                postfix.eachWithIndex { it, i ->
+                    (stringsItems, stringsArrayItems, stringsItemNoTranslate) = langStrings.get(it)
+                    stringsItemNoTranslate.find { it.key == key }?.each {
+                        def cell_other_value = new Label(2 + i, currentRow + index + 1, it.value)   // 3列1行开始
+                        sheet.addCell(cell_other_value)
+                    }
                 }
             }
         }
@@ -390,13 +397,16 @@ class ResStringRecord implements ExtractStringResAPI {
                 def arrayItems = []
                 it.value().each {
                     def value = it.text()
+                    arrayItems << value
+
+                    /* 直接使用value
                     //解出引用嵌引用的
                     def matcher = value =~ /@string\/(.+)/
                     if (matcher) {
                         arrayItems << stringItems[matcher[0][1]]
                     } else {
                         arrayItems << value
-                    }
+                    }*/
                 }
                 arrayArrayItems << [(it.attributes()["name"]): (arrayItems)]
             }

@@ -22,8 +22,8 @@ class ExtractStringsPlugin implements Plugin<Project> {
         // res folder
         String resFolder = project.android.sourceSets.main.res.srcDirs[0].getAbsolutePath()
 
-        // create a task use group
-        final def currentTask = project.tasks.create(["name": "doExtractStringsToExcel", "group": "extract Strings"]) << {
+        // === 1. Task 1: xml to excel, create a task use group
+        final def currentTask = project.tasks.create(["name": "strings2Excel", "group": "extractStrings"]) << {
             if (!project.android) {
                 throw new IllegalStateException('Must apply \'com.android.application\' or \'com.android.library\' first!')
             }
@@ -44,6 +44,18 @@ class ExtractStringsPlugin implements Plugin<Project> {
         // 设置依赖于build Task (奇怪，加了判断无效，必须先手动build，再抽资源)
         if(!project.extractConfig?.useRes) {
             currentTask.dependsOn(project.tasks.findByName("build"))
+        }
+
+        // === 2. Task 2: excel to xml
+        final excelToXml = project.tasks.create(["name": "excel2Strings", "group": "extractStrings"]) << {
+            if (!project.android) {
+                throw new IllegalStateException('Must apply \'com.android.application\' or \'com.android.library\' first!')
+            }
+
+
+
+
+            println('>>>>>>>>>> ok excel2StringsXml')
         }
     }
 }

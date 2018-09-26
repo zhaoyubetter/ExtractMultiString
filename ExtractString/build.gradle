@@ -17,6 +17,7 @@ repositories {
 }
 
 sourceSets {
+    main.java.srcDirs += 'src/main/java'
     main.java.srcDirs += 'src/main/groovy'
 }
 

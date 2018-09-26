@@ -9,11 +9,17 @@
     <string name="aaa_four">四</string>
     <string name="aaa_five">五</string>
 
-    <string-array name="aaa_string_number">
+    <string-array name='aaa_string_number'>
         <item>@string/aaa_one</item>
         <item>@string/aaa_two</item>
         <item>@string/aaa_three</item>
         <item>@string/aaa_four</item>
+        <item>@string/aaa_five</item>
+        <item>@string/app_name</item> <!-- 目录下的其他xml文件 -->
+        <item>六</item>
+    </string-array>
+
+    <string-array name='bbbb_aary'>
         <item>@string/aaa_five</item>
         <item>@string/app_name</item> <!-- 目录下的其他xml文件 -->
         <item>六</item>
