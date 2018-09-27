@@ -1,9 +1,11 @@
 apply plugin: 'groovy'
-apply plugin: 'maven'   //maven插件，用于上传插件到仓库
+//apply plugin: 'maven'   //maven插件，用于上传插件到仓库
+
+apply plugin: 'com.novoda.bintray-release'
 
 // maven 仓库坐标
-group = "com.github.extract"        //project属性
-version = "1.1.1"                   //project属性
+def group = "com.github.extract"        //project属性
+def VERSION = "1.1.1"                   //project属性
 
 dependencies {
     implementation gradleApi()//gradle sdk
@@ -17,17 +19,33 @@ repositories {
 }
 
 sourceSets {
+    main.java.srcDirs += 'src/main/java'
     main.java.srcDirs += 'src/main/groovy'
 }
 
-// 发布到本地仓库
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            repository(url: uri('../repo'))
-        }
-    }
+
+// ===================================
+// gradle clean build generatePomFileForMavenPublication bintrayUpload -PbintrayUser=zhaoyubetter -PbintrayKey= -PdryRun=false
+
+//添加
+publish {
+    userOrg = 'zhaoyubetter'//bintray.com用户名
+    groupId = group //jcenter上的路径
+    artifactId = 'ExtractMultiString'//项目名称
+    publishVersion = VERSION //版本号
+    desc = 'Android resource: strings.xml to excel And excel to strings.xml'//描述，不重要
+    website = 'https://github.com/zhaoyubetter/ExtractMultiString'//网站，不重要
 }
 
+//// 发布到本地仓库
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            repository(url: uri('../repo'))
+//        }
+//    }
+//}
+
+
 // 这个必须放最后
-apply from: '../bintray.gradle'
+//apply from: '../bintray.gradle'

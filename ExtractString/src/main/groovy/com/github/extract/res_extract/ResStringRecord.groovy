@@ -53,13 +53,13 @@ class ResStringRecord implements ExtractStringResAPI {
 
     // test method
     static void main(String[] args) {
-        def resFolderPath = "/Users/zhaoyu1/Documents/github/ExtractMultiString/app/src/main/res"
-        ExtractConfiguration configuration = new ExtractConfiguration()
-        configuration.postfix = ['en', 'zh-rTW']
-        configuration.targetFileFullPath = '/Users/zhaoyu1/Documents/github/ExtractMultiString/app/test.xls'
-
-        ResStringRecord record = new ResStringRecord(resFolderPath)
-        record.create(configuration, new File('.'))
+//        def resFolderPath = "/Users/zhaoyu1/Documents/github/ExtractMultiString/app/src/main/res"
+//        ExtractConfiguration configuration = new ExtractConfiguration()
+//        configuration.postfix = ['en', 'zh-rTW']
+//        configuration.targetFileFullPath = '/Users/zhaoyu1/Documents/github/ExtractMultiString/app/test.xls'
+//
+//        ResStringRecord record = new ResStringRecord(resFolderPath)
+//        record.create(configuration, new File('.'))
     }
 
     @Override

@@ -1,8 +1,8 @@
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven-publish'
+//apply plugin: 'com.jfrog.bintray'
+//apply plugin: 'maven-publish'
 
 def projectName = "ExtractString"
-def mavenDesc = 'Take a string resource Plugin'
+def mavenDesc = 'Android resource: strings.xml to excel And excel to strings.xml'
 def baseUrl = 'https://github.com/zhaoyubetter'
 def siteUrl = baseUrl
 def gitUrl = "${baseUrl}/ExtractMultiString"
@@ -11,7 +11,7 @@ def issueUrl = "${baseUrl}/issues"
 def licenseIds = ['Apache-2.0']
 def licenseNames = ['The Apache Software License, Version 2.0']
 def licenseUrls = ['http://www.apache.org/licenses/LICENSE-2.0.txt']
-def inception = '2016'
+def inception = '2018'
 
 def username = 'zhaoyubetter'
 
@@ -69,6 +69,7 @@ artifacts {
     archives javadocJar
     archives sourcesJar
 }
+
 
 
 bintray {
