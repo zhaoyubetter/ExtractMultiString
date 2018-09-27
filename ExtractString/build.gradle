@@ -31,7 +31,7 @@ sourceSets {
 publish {
     userOrg = 'zhaoyubetter'//bintray.com用户名
     groupId = group //jcenter上的路径
-    artifactId = 'ExtractMultiString'//项目名称
+    artifactId = 'ExtractString'//项目名称
     publishVersion = VERSION //版本号
     desc = 'Android resource: strings.xml to excel And excel to strings.xml'//描述，不重要
     website = 'https://github.com/zhaoyubetter/ExtractMultiString'//网站，不重要
