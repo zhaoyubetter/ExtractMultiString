@@ -6,6 +6,4 @@
     <string name="xlistview_header_last_time">Last Update Time:</string>
     <string name="xlistview_footer_hint_normal">View More</string>
     <string name="xlistview_footer_hint_ready">Release Loading More</string>
-
-    <string name="xxxxxx" translatable="false">xxxxxxx</string>
 </resources>

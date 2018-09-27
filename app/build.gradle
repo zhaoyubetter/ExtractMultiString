@@ -28,6 +28,7 @@ android {
 
 extractConfig {
     postfix = ['en', 'zh-rTW']
+    translatedExcelFilePath = '/Users/zhaoyu1/Documents/github/ExtractMultiString/app/build/export_201809271122.xls'
     //targetFileFullPath = "D://aaa.xls"  // 目标文件全路径，可不填，默认生成在build文件下；
 }
 
@@ -35,6 +36,7 @@ extractConfig {
 task('getCurrentPath') << {
     println(">>>>>>>>> " + project.android.sourceSets.main.res.srcDirs[0].getAbsolutePath())
 }
+
 
 
 

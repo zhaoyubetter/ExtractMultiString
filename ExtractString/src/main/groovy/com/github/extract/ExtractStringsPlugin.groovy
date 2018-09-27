@@ -1,6 +1,7 @@
 package com.github.extract
 
 import com.github.extract.api.ExtractStringResAPI
+import com.github.extract.excel_strings.Excel2StringsXml
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -23,7 +24,8 @@ class ExtractStringsPlugin implements Plugin<Project> {
         String resFolder = project.android.sourceSets.main.res.srcDirs[0].getAbsolutePath()
 
         // === 1. Task 1: xml to excel, create a task use group
-        final def currentTask = project.tasks.create(["name": "strings2Excel", "group": "extractStrings"]) << {
+        final
+        def currentTask = project.tasks.create(["name": "strings2Excel", "group": "extractStrings"]) << {
             if (!project.android) {
                 throw new IllegalStateException('Must apply \'com.android.application\' or \'com.android.library\' first!')
             }
@@ -41,8 +43,8 @@ class ExtractStringsPlugin implements Plugin<Project> {
             println(">>>>> finish extract, Total time: ${(System.currentTimeMillis() - startTime) / 1000} ")
         }
 
-        // 设置依赖于build Task (奇怪，加了判断无效，必须先手动build，再抽资源)
-        if(!project.extractConfig?.useRes) {
+        // 设置依赖于build Task (奇怪，加了判断无效，必须先手动build，再抽资源)，先分期
+        if (!project.extractConfig?.useRes) {
             currentTask.dependsOn(project.tasks.findByName("build"))
         }
 
@@ -52,10 +54,18 @@ class ExtractStringsPlugin implements Plugin<Project> {
                 throw new IllegalStateException('Must apply \'com.android.application\' or \'com.android.library\' first!')
             }
 
-
-
-
-            println('>>>>>>>>>> ok excel2StringsXml')
+            // 构建目录
+            def buidPath = project.buildDir
+            def excelFilePath = project.extractConfig?.translatedExcelFilePath
+            if (excelFilePath == null || !new File(excelFilePath).exists()) {
+                throw new IllegalStateException('Excel2StringXml must be config the translated Excel File full path, and keep it right.')
+            } else {
+                println ">>>>>> Start excel2StringXml Task !"
+                println(">>>>>> Translated excel file path: ${excelFilePath}")
+                Excel2StringsXml work = new Excel2StringsXml(excelFilePath, buidPath)
+                work.doWork()
+                println(">>>>>> Finish it, You can find xml file at : $buidPath")
+            }
         }
     }
 }

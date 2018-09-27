@@ -10,6 +10,9 @@ public class ExtractConfiguration {
     public List<String> postfix;
     // 生成的目标文件全路径，不配置，则使用默认
     public String targetFileFullPath;
+
+    // 已经翻译好的excel 文件路径
+    public String translatedExcelFilePath;
     /**
      * 使用res目录下的资源,false 使用build下的merge资源
      */
