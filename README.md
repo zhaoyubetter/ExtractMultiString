@@ -2,7 +2,7 @@
 
 Android 抽离字符串插件：
 
-通过gradle 插件结合jxl，将app 或者 lib 库中的strings多语言资源文件，抽出成 excel 文件，并感觉语言标识，生成多个excel表格，用以方便开发人查看，方便多语言整理(支持 strings-array)；
+通过gradle 插件结合jxl，将app 或者 lib 库中的strings多语言资源文件，抽出成 excel 文件，并根据语言标识，生成多个excel表格，用以方便开发人查看，方便多语言整理(支持 strings-array)；
 
 
 
