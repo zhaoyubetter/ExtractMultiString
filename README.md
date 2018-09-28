@@ -8,7 +8,8 @@ Android 抽离字符串插件：
 
 > 特别说明：本插件不能自动翻译，如需自动翻译，可以如下插件：
 >
-> 地址：https://github.com/Airsaid/AndroidLocalizePlugin，如果您要对比各个语言的差异，那本插件您不要错过！
+> 地址：https://github.com/Airsaid/AndroidLocalizePlugin
+> 如果您要对比各个语言的差异，那本插件您不要错过！
 
 
 
